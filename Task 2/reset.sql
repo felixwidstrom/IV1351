@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS attendance, contact_persons, instructors, instructor_availability, timeslots, instruments, known_instruments, lessons, pricing, rentable_instruments, siblings, students CASCADE;

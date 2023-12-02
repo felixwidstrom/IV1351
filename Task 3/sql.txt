@@ -1,0 +1,78 @@
+Show the number of lessons given per month during a specified year.
+
+SELECT
+    TO_CHAR(t.date, 'Mon') AS month,
+    COUNT(*) AS total,
+	COUNT(*) FILTER(WHERE l.lesson_type = 'Individual') AS individual,
+	COUNT(*) FILTER(WHERE l.lesson_type = 'Group') AS group,
+	COUNT(*) FILTER(WHERE l.lesson_type = 'Ensemble') AS ensemble
+FROM
+    lessons l
+JOIN
+    timeslots t ON l.timeslot_id = t.timeslot_id
+WHERE
+    EXTRACT(YEAR FROM t.date) = 2023
+GROUP BY
+    EXTRACT(MONTH FROM t.date)
+ORDER BY
+    month;
+
+Show how many students there are with no sibling, with one sibling, with two siblings, etc.
+
+SELECT
+    sibling_count,
+    COUNT(*) AS student_count
+FROM (
+    SELECT
+        st.student_id,
+        COUNT(s.sibling_id) AS sibling_count
+    FROM
+        students st
+    LEFT JOIN
+        siblings s ON st.student_id = s.student_id
+    GROUP BY
+        st.student_id
+) AS subquery
+GROUP BY
+    sibling_count
+ORDER BY
+    sibling_count;
+
+List ids and names of all instructors who has given more than a specific number of lessons during the current month.
+
+SELECT
+    i.instructor_id,
+    i.name,
+    COUNT(*) AS lessons_given
+FROM
+    instructor_availability ia
+JOIN
+    timeslots t ON ia.timeslot_id = t.timeslot_id
+JOIN
+    instructors i ON ia.instructor_id = i.instructor_id
+WHERE
+    EXTRACT(MONTH FROM t.date) = EXTRACT(MONTH FROM CURRENT_DATE)
+GROUP BY
+    i.instructor_id, i.name
+HAVING
+    COUNT(*) > 0;
+
+List all ensembles held during the next week
+
+SELECT
+	TO_CHAR(t.date, 'Dy') AS weekday,
+	l.genre,
+    CASE
+		WHEN l.enrolled >= l.max_enrolled THEN 'Full Booked'
+        WHEN l.enrolled >= l.max_enrolled - 2 THEN '1-2 Seats Left'
+        ELSE 'More Seats Left'
+    END AS availability
+FROM
+    lessons l
+JOIN
+    timeslots t ON l.timeslot_id = t.timeslot_id
+WHERE
+    l.lesson_type = 'Ensemble'
+    AND EXTRACT(WEEK FROM t.date) = EXTRACT(WEEK FROM CURRENT_DATE) + 1
+ORDER BY
+    weekday DESC;
