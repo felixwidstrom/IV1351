@@ -13,9 +13,9 @@ JOIN
 WHERE
     EXTRACT(YEAR FROM t.date) = 2023
 GROUP BY
-    EXTRACT(MONTH FROM t.date)
+    TO_CHAR(t.date, 'Mon')
 ORDER BY
-    month;
+    month DESC;
 
 Show how many students there are with no sibling, with one sibling, with two siblings, etc.
 
@@ -32,7 +32,7 @@ FROM (
         siblings s ON st.student_id = s.student_id
     GROUP BY
         st.student_id
-) AS subquery
+)
 GROUP BY
     sibling_count
 ORDER BY
@@ -63,7 +63,7 @@ SELECT
 	TO_CHAR(t.date, 'Dy') AS weekday,
 	l.genre,
     CASE
-		WHEN l.enrolled >= l.max_enrolled THEN 'Full Booked'
+		WHEN l.enrolled >= l.max_enrolled THEN 'Fully Booked'
         WHEN l.enrolled >= l.max_enrolled - 2 THEN '1-2 Seats Left'
         ELSE 'More Seats Left'
     END AS availability
@@ -75,4 +75,5 @@ WHERE
     l.lesson_type = 'Ensemble'
     AND EXTRACT(WEEK FROM t.date) = EXTRACT(WEEK FROM CURRENT_DATE) + 1
 ORDER BY
-    weekday DESC;
+    weekday DESC,
+	l.genre;
