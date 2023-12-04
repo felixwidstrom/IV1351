@@ -437,3 +437,12 @@ INSERT INTO attendance (lesson_id, student_id) VALUES
     (20000011, 10000048),
     (20000011, 10000049),
     (20000011, 10000050);
+
+DROP INDEX idx_lessons_timeslot_id;
+DROP INDEX idx_timeslots_timeslot_id;
+DROP INDEX idx_timeslots_date;
+DROP INDEX idx_lessons_lesson_type;
+CREATE INDEX idx_lessons_timeslot_id ON lessons (timeslot_id);
+CREATE INDEX idx_timeslots_timeslot_id ON timeslots (timeslot_id);
+CREATE INDEX idx_timeslots_date ON timeslots (date);
+CREATE INDEX idx_lessons_lesson_type ON lessons (lesson_type);

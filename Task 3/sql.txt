@@ -17,6 +17,23 @@ GROUP BY
 ORDER BY
     month DESC;
 
+EXPLAIN ANALYZE
+
+"GroupAggregate  (cost=3.42..3.46 rows=1 width=64) (actual time=0.121..0.131 rows=3 loops=1)"
+"  Group Key: (to_char((t.date)::timestamp with time zone, 'Mon'::text))"
+"  ->  Sort  (cost=3.42..3.42 rows=1 width=40) (actual time=0.114..0.116 rows=50 loops=1)"
+"        Sort Key: (to_char((t.date)::timestamp with time zone, 'Mon'::text)) DESC"
+"        Sort Method: quicksort  Memory: 26kB"
+"        ->  Hash Join  (cost=1.76..3.41 rows=1 width=40) (actual time=0.068..0.093 rows=50 loops=1)"
+"              Hash Cond: (l.timeslot_id = t.timeslot_id)"
+"              ->  Seq Scan on lessons l  (cost=0.00..1.50 rows=50 width=12) (actual time=0.010..0.012 rows=50 loops=1)"
+"              ->  Hash  (cost=1.75..1.75 rows=1 width=8) (actual time=0.034..0.035 rows=50 loops=1)"
+"                    Buckets: 1024  Batches: 1  Memory Usage: 10kB"
+"                    ->  Seq Scan on timeslots t  (cost=0.00..1.75 rows=1 width=8) (actual time=0.012..0.025 rows=50 loops=1)"
+"                          Filter: (EXTRACT(year FROM date) = '2023'::numeric)"
+"Planning Time: 0.299 ms"
+"Execution Time: 0.165 ms"
+
 Show how many students there are with no sibling, with one sibling, with two siblings, etc.
 
 SELECT
