@@ -1,4 +1,4 @@
-Show the number of lessons given per month during a specified year.
+--Show the number of lessons given per month during a specified year.
 
 SELECT
     TO_CHAR(t.date, 'Mon') AS month,
@@ -17,9 +17,9 @@ GROUP BY
 ORDER BY
     month DESC;
 
-EXPLAIN ANALYZE
+--EXPLAIN ANALYZE
 
-"GroupAggregate  (cost=3.42..3.46 rows=1 width=64) (actual time=0.121..0.131 rows=3 loops=1)"
+/*"GroupAggregate  (cost=3.42..3.46 rows=1 width=64) (actual time=0.121..0.131 rows=3 loops=1)"
 "  Group Key: (to_char((t.date)::timestamp with time zone, 'Mon'::text))"
 "  ->  Sort  (cost=3.42..3.42 rows=1 width=40) (actual time=0.114..0.116 rows=50 loops=1)"
 "        Sort Key: (to_char((t.date)::timestamp with time zone, 'Mon'::text)) DESC"
@@ -32,9 +32,9 @@ EXPLAIN ANALYZE
 "                    ->  Seq Scan on timeslots t  (cost=0.00..1.75 rows=1 width=8) (actual time=0.012..0.025 rows=50 loops=1)"
 "                          Filter: (EXTRACT(year FROM date) = '2023'::numeric)"
 "Planning Time: 0.299 ms"
-"Execution Time: 0.165 ms"
+"Execution Time: 0.165 ms"*/
 
-Show how many students there are with no sibling, with one sibling, with two siblings, etc.
+--Show how many students there are with no sibling, with one sibling, with two siblings, etc.
 
 SELECT
     sibling_count,
@@ -55,7 +55,7 @@ GROUP BY
 ORDER BY
     sibling_count;
 
-List ids and names of all instructors who has given more than a specific number of lessons during the current month.
+--List ids and names of all instructors who has given more than a specific number of lessons during the current month.
 
 SELECT
     i.instructor_id,
@@ -74,7 +74,7 @@ GROUP BY
 HAVING
     COUNT(*) > 0;
 
-List all ensembles held during the next week
+--List all ensembles held during the next week
 
 SELECT
 	TO_CHAR(t.date, 'Dy') AS weekday,
